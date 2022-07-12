@@ -12,25 +12,44 @@ const scene = new THREE.Scene();
 
 //obeject
 const axes = new THREE.AxesHelper(2, 2, 2);
-
 scene.add(axes);
 
-//东西 - 家电、家具
-//物体：geometry 几何体  + material 材质、皮肤
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial();
+let cubes = [];
+function createCube() {
+  let w = Math.random();
+  //物体：geometry 几何体  + material 材质、皮肤
+  const geometry = new THREE.BoxGeometry(w, w, w);
+  const material = new THREE.MeshBasicMaterial({
+    //color: "rgb(255,0,0)",
+    color: 0xffff00 * Math.random(),
+    //color: "red",
+  });
 
-const cube = new THREE.Mesh(geometry, material);
+  const cube = new THREE.Mesh(geometry, material);
 
-scene.add(cube);
+  cube.position.set(
+    (Math.random() - 0.5) * 4,
+    (Math.random() - 0.5) * 4,
+    (Math.random() - 0.5) * 4
+  );
 
-//光线 台灯、吊灯、太阳光
+  cubes.push(cube);
+}
+
+let n = 20;
+for (let i = 0; i < n; i++) {
+  createCube();
+}
+
+cubes.forEach((cube) => {
+  scene.add(cube);
+});
+
 const light = new THREE.AmbientLight();
 
 scene.add(light);
 
 //camera
-//相机  宽高比
 const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 100);
 camera.position.set(1, 3, 5);
 camera.lookAt(0, 0, 0);
@@ -44,18 +63,19 @@ renderer.render(scene, camera);
 document.body.append(renderer.domElement);
 document.body.append(stat.domElement);
 
-//three自带
+//动效 根据时间
 const clock = new THREE.Clock();
 tick();
 function tick() {
   //time一直均匀增加
   const time = clock.getElapsedTime();
 
-  //cube.rotation.x = time;
-
-  cube.position.x = Math.sin(time);
-  cube.position.y = Math.cos(time);
+  cubes.forEach((cube, index) => {
+    cube.rotation.x = time * 0.1 + index;
+    cube.rotation.y = time * 0.1 + index;
+  });
 
   requestAnimationFrame(tick);
   renderer.render(scene, camera);
+  stat.update();
 }
