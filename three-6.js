@@ -19,7 +19,7 @@ const group2 = new THREE.Group();
 
 //立方体
 
-/*----Cube 1   🌞   ---------------------------------------------------*/
+/*----Cube 1   🚗   ---------------------------------------------------*/
 const g1 = new THREE.BoxGeometry(1, 1, 1);
 const m1 = new THREE.MeshNormalMaterial();
 const cube1 = new THREE.Mesh(g1, m1);
